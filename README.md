@@ -31,7 +31,7 @@ A RESTful API for a job posting and bidding platform built with Node.js, Express
 
 1. Clone the repository
 ```bash
-git clone https://github.com/gopikant21/job-posting-api.git
+git clone https://github.com/gopikant21/peerhire.git
 cd job-posting-api
 ```
 
@@ -43,7 +43,7 @@ npm install
 3. Create a `.env` file in the root directory with the following variables:
 ```
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/peerhire_db
+MONGO_URI=mongodb+srv://gopikant5jan:N51Bj0v4OtgsNYI0@cluster0.wremit7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRE=30d
 ```
