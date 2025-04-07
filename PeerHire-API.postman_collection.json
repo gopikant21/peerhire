@@ -1,0 +1,677 @@
+{
+    "info": {
+      "_postman_id": "5f8c12de-7a1b-4382-8a64-2d9f3e0a9d81",
+      "name": "PeerHire Job Posting & Bidding API",
+      "description": "A complete collection for testing the PeerHire Job Posting & Bidding API endpoints.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Authentication",
+        "item": [
+          {
+            "name": "Register Employer",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"employer@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"employer\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/auth/register",
+                "host": ["{{baseUrl}}"],
+                "path": ["auth", "register"]
+              },
+              "description": "Register a new employer user"
+            },
+            "response": []
+          },
+          {
+            "name": "Register Freelancer",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"name\": \"Jane Smith\",\n    \"email\": \"freelancer@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"freelancer\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/auth/register",
+                "host": ["{{baseUrl}}"],
+                "path": ["auth", "register"]
+              },
+              "description": "Register a new freelancer user"
+            },
+            "response": []
+          },
+          {
+            "name": "Login - Employer",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var jsonData = pm.response.json();",
+                    "if (jsonData && jsonData.token) {",
+                    "    pm.environment.set('employerToken', jsonData.token);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"email\": \"employer@example.com\",\n    \"password\": \"password123\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/auth/login",
+                "host": ["{{baseUrl}}"],
+                "path": ["auth", "login"]
+              },
+              "description": "Login as employer and save token to environment"
+            },
+            "response": []
+          },
+          {
+            "name": "Login - Freelancer",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var jsonData = pm.response.json();",
+                    "if (jsonData && jsonData.token) {",
+                    "    pm.environment.set('freelancerToken', jsonData.token);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"email\": \"freelancer@example.com\",\n    \"password\": \"password123\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/auth/login",
+                "host": ["{{baseUrl}}"],
+                "path": ["auth", "login"]
+              },
+              "description": "Login as freelancer and save token to environment"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Current User - Employer",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/auth/me",
+                "host": ["{{baseUrl}}"],
+                "path": ["auth", "me"]
+              },
+              "description": "Get the profile of the currently logged in employer"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Current User - Freelancer",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{freelancerToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/auth/me",
+                "host": ["{{baseUrl}}"],
+                "path": ["auth", "me"]
+              },
+              "description": "Get the profile of the currently logged in freelancer"
+            },
+            "response": []
+          }
+        ]
+      },
+      {
+        "name": "Jobs",
+        "item": [
+          {
+            "name": "Create Job",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var jsonData = pm.response.json();",
+                    "if (jsonData && jsonData.data && jsonData.data._id) {",
+                    "    pm.environment.set('jobId', jsonData.data._id);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"title\": \"Build a React Website\",\n    \"description\": \"Looking for a developer to build a responsive website using React. The website should include a landing page, about page, services page, and contact form.\",\n    \"budget\": 1500,\n    \"duration\": 21,\n    \"skillsRequired\": [\"react\", \"javascript\", \"html\", \"css\", \"responsive-design\"]\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/jobs/create",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs", "create"]
+              },
+              "description": "Create a new job posting (employer only) and save jobId to environment"
+            },
+            "response": []
+          },
+          {
+            "name": "Create Second Job",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"title\": \"Develop a Node.js Backend API\",\n    \"description\": \"Need an experienced developer to create a RESTful API using Node.js, Express, and MongoDB. The API should include authentication, data validation, and proper error handling.\",\n    \"budget\": 2000,\n    \"duration\": 30,\n    \"skillsRequired\": [\"nodejs\", \"express\", \"mongodb\", \"rest-api\", \"jwt\"]\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/jobs/create",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs", "create"]
+              },
+              "description": "Create a second job posting for testing filtering and pagination"
+            },
+            "response": []
+          },
+          {
+            "name": "Get All Jobs",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/jobs",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs"]
+              },
+              "description": "Get all job postings"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Job by ID",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/jobs/{{jobId}}",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs", "{{jobId}}"]
+              },
+              "description": "Get detailed information about a specific job"
+            },
+            "response": []
+          },
+          {
+            "name": "Filter Jobs by Skills",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/jobs?skills=react,javascript",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs"],
+                "query": [
+                  {
+                    "key": "skills",
+                    "value": "react,javascript"
+                  }
+                ]
+              },
+              "description": "Filter jobs by required skills (comma-separated)"
+            },
+            "response": []
+          },
+          {
+            "name": "Filter Jobs with Pagination",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/jobs?page=1&limit=5",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs"],
+                "query": [
+                  {
+                    "key": "page",
+                    "value": "1"
+                  },
+                  {
+                    "key": "limit",
+                    "value": "5"
+                  }
+                ]
+              },
+              "description": "Get jobs with pagination"
+            },
+            "response": []
+          },
+          {
+            "name": "Filter Jobs with Sorting",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/jobs?sort=budget,duration",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs"],
+                "query": [
+                  {
+                    "key": "sort",
+                    "value": "budget,duration"
+                  }
+                ]
+              },
+              "description": "Get jobs sorted by specific fields"
+            },
+            "response": []
+          },
+          {
+            "name": "Update Job",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"budget\": 1800,\n    \"duration\": 25,\n    \"description\": \"Looking for a developer to build a responsive website using React. The website should include a landing page, about page, services page, blog, and contact form with email integration.\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/jobs/{{jobId}}",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs", "{{jobId}}"]
+              },
+              "description": "Update specific job details (employer only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete Job (ERROR - Freelancer)",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{freelancerToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/jobs/{{jobId}}",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs", "{{jobId}}"]
+              },
+              "description": "Try to delete a job as a freelancer (should fail)"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete Job (Employer)",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/jobs/{{jobId}}",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs", "{{jobId}}"]
+              },
+              "description": "Delete a job (use with caution as it permanently removes the job)"
+            },
+            "response": []
+          }
+        ]
+      },
+      {
+        "name": "Bids",
+        "item": [
+          {
+            "name": "Create Bid",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var jsonData = pm.response.json();",
+                    "if (jsonData && jsonData.data && jsonData.data._id) {",
+                    "    pm.environment.set('bidId', jsonData.data._id);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{freelancerToken}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"bidAmount\": 1350,\n    \"timeline\": 18,\n    \"message\": \"I have 5+ years of experience with React development and have built numerous responsive websites. I can implement all the requested features and provide ongoing support for one month after completion. Looking forward to working with you on this project!\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/bids/{{jobId}}",
+                "host": ["{{baseUrl}}"],
+                "path": ["bids", "{{jobId}}"]
+              },
+              "description": "Place a bid on a job (freelancer only) and save bidId to environment"
+            },
+            "response": []
+          },
+          {
+            "name": "Create Bid (ERROR - Employer)",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"bidAmount\": 1400,\n    \"timeline\": 20,\n    \"message\": \"I can do this project.\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/bids/{{jobId}}",
+                "host": ["{{baseUrl}}"],
+                "path": ["bids", "{{jobId}}"]
+              },
+              "description": "Try to place a bid as an employer (should fail)"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Bids - Employer",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/bids/{{jobId}}",
+                "host": ["{{baseUrl}}"],
+                "path": ["bids", "{{jobId}}"]
+              },
+              "description": "Get all bids for a specific job (employer view)"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Bids - Freelancer",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{freelancerToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/bids/{{jobId}}",
+                "host": ["{{baseUrl}}"],
+                "path": ["bids", "{{jobId}}"]
+              },
+              "description": "Get freelancer's own bid for a specific job (freelancer view)"
+            },
+            "response": []
+          },
+          {
+            "name": "Accept Bid",
+            "request": {
+              "method": "PATCH",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/bids/{{bidId}}/accept",
+                "host": ["{{baseUrl}}"],
+                "path": ["bids", "{{bidId}}", "accept"]
+              },
+              "description": "Accept a bid (employer only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Accept Bid (ERROR - Freelancer)",
+            "request": {
+              "method": "PATCH",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{freelancerToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/bids/{{bidId}}/accept",
+                "host": ["{{baseUrl}}"],
+                "path": ["bids", "{{bidId}}", "accept"]
+              },
+              "description": "Try to accept a bid as a freelancer (should fail)"
+            },
+            "response": []
+          },
+          {
+            "name": "Reject Bid",
+            "request": {
+              "method": "PATCH",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/bids/{{bidId}}/reject",
+                "host": ["{{baseUrl}}"],
+                "path": ["bids", "{{bidId}}", "reject"]
+              },
+              "description": "Reject a bid (employer only)"
+            },
+            "response": []
+          }
+        ]
+      },
+      {
+        "name": "Error Handling Tests",
+        "item": [
+          {
+            "name": "Invalid Job ID",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/jobs/invalidid123",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs", "invalidid123"]
+              },
+              "description": "Test error handling with invalid job ID"
+            },
+            "response": []
+          },
+          {
+            "name": "Missing Required Fields",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{employerToken}}"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"title\": \"Incomplete Job\"\n}"
+              },
+              "url": {
+                "raw": "{{baseUrl}}/jobs/create",
+                "host": ["{{baseUrl}}"],
+                "path": ["jobs", "create"]
+              },
+              "description": "Test validation for missing required fields"
+            },
+            "response": []
+          },
+          {
+            "name": "Unauthorized Access",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/auth/me",
+                "host": ["{{baseUrl}}"],
+                "path": ["auth", "me"]
+              },
+              "description": "Test access to protected route without token"
+            },
+            "response": []
+          },
+          {
+            "name": "Invalid Token",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer invalidtoken123"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/auth/me",
+                "host": ["{{baseUrl}}"],
+                "path": ["auth", "me"]
+              },
+              "description": "Test access with invalid token"
+            },
+            "response": []
+          }
+        ]
+      }
+    ],
+    "event": [
+      {
+        "listen": "prerequest",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            ""
+          ]
+        }
+      },
+      {
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            ""
+          ]
+        }
+      }
+    ],
+    "variable": [
+      {
+        "key": "baseUrl",
+        "value": "http://localhost:5000/api",
+        "type": "string"
+      }
+    ]
+  }

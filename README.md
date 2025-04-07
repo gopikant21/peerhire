@@ -32,7 +32,6 @@ A RESTful API for a job posting and bidding platform built with Node.js, Express
 1. Clone the repository
 ```bash
 git clone https://github.com/gopikant21/peerhire.git
-cd job-posting-api
 ```
 
 2. Install dependencies
@@ -142,12 +141,12 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer YOUR_
 
 1. Build the Docker image:
 ```bash
-docker build -t job-posting-api .
+docker build -t peerhire-backend .
 ```
 
 2. Run the container:
 ```bash
-docker run -p 5000:5000 job-posting-api
+docker run -p 5000:5000 peerhire-backend
 ```
 
 ## Implemented Bonus Features
